@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim
+    platform: linux/amd64
+    container_name: oracle-bank-db
+    environment:
+      ORACLE_PASSWORD: BankAdmin123
+      APP_USER: bankuser
+      APP_USER_PASSWORD: BankUser123
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+      - ./docker/oracle/init:/container-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  tomcat:
+    build:
+      context: .
+      dockerfile: docker/tomcat/Dockerfile
+    container_name: bank-tomcat
+    ports:
+      - "8080:8080"
+    depends_on:
+      oracle-db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:oracle:thin:@oracle-db:1521/XEPDB1
+      DB_USER: bankuser
+      DB_PASSWORD: BankUser123
+
+volumes:
+  oracle-data:

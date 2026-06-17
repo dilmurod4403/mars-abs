@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+        http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>5.0</tlib-version>
+    <short-name>t</short-name>
+    <uri>http://fido.uz/abs/tags</uri>
+    <info>MARS ABS Tag Library v5 — table &gt; field/filter + grid/col</info>
+
+    <!-- ==================== TABLE TAG ==================== -->
+    <tag>
+        <name>table</name>
+        <tag-class>uz.fido.abs.core.tag.TableTag</tag-class>
+        <body-content>JSP</body-content>
+        <info>View dan data oladi. Ichida t:field va t:grid joylashadi.</info>
+        <attribute>
+            <name>view</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Oracle view yoki jadval nomi</description>
+        </attribute>
+        <attribute>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>GridModel o'zgaruvchi nomi</description>
+        </attribute>
+        <attribute>
+            <name>orderBy</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>ORDER BY ifodasi</description>
+        </attribute>
+        <attribute>
+            <name>columns</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Tanlanadigan ustunlar (default: *)</description>
+        </attribute>
+    </tag>
+
+    <!-- ==================== FIELD TAG (data) ==================== -->
+    <tag>
+        <name>field</name>
+        <tag-class>uz.fido.abs.core.tag.FieldTag</tag-class>
+        <body-content>JSP</body-content>
+        <info>Ma'lumot maydoni — t:table ichida. Ichida t:filter bo'lishi mumkin.</info>
+        <attribute>
+            <name>field</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>DB ustun nomi</description>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Maydon sarlavhasi (default: field nomi)</description>
+        </attribute>
+        <attribute>
+            <name>format</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Ma'lumot formati: "dd.MM.yyyy", "#,##0.00"</description>
+        </attribute>
+    </tag>
+
+    <!-- ==================== FILTER TAG ==================== -->
+    <tag>
+        <name>filter</name>
+        <tag-class>uz.fido.abs.core.tag.FilterTag</tag-class>
+        <body-content>empty</body-content>
+        <info>Filter — t:field ichida ishlatiladi.</info>
+        <attribute>
+            <name>type</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Filter turi: text (default), select, date</description>
+        </attribute>
+        <attribute>
+            <name>options</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Select uchun variantlar: "ACTIVE:Faol,PENDING:Kutilmoqda"</description>
+        </attribute>
+    </tag>
+
+    <!-- ==================== GRID TAG (UI) ==================== -->
+    <tag>
+        <name>grid</name>
+        <tag-class>uz.fido.abs.core.tag.GridTag</tag-class>
+        <body-content>JSP</body-content>
+        <info>UI chizish sozlamalari — t:table ichida. Ichida t:col joylashadi.</info>
+        <attribute>
+            <name>pageSize</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+            <description>Sahifadagi qatorlar soni (default: 20)</description>
+        </attribute>
+        <attribute>
+            <name>mode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Chizish rejimi: "html" yoki "json"</description>
+        </attribute>
+        <attribute>
+            <name>emptyText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Bo'sh holat xabari</description>
+        </attribute>
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>HTML table yoki JSON container id</description>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Grid sarlavhasi</description>
+        </attribute>
+        <attribute>
+            <name>modal</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>"true" bo'lsa, ustun link'lari modal oynada ochiladi</description>
+        </attribute>
+        <attribute>
+            <name>modalSize</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Modal o'lchami: sm, md, lg, xl (default: avto)</description>
+        </attribute>
+        <attribute>
+            <name>selectable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>"true" = qator tanlash (checkbox ustun + bulk toolbar)</description>
+        </attribute>
+        <attribute>
+            <name>stickyHeader</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>"true"/"false" = sarlavha scroll'da tepada qotadi (default: true)</description>
+        </attribute>
+        <attribute>
+            <name>saveUrl</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Inline tahrir/bulk amal saqlash uchun POST manzili</description>
+        </attribute>
+        <attribute>
+            <name>rowId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Qator PK ustuni nomi (bulk amal id manbai, masalan customer_id)</description>
+        </attribute>
+        <attribute>
+            <name>bulkStatus</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Bulk status variantlari: "ACTIVE:Faollashtirish,BLOCKED:Bloklash"</description>
+        </attribute>
+    </tag>
+
+    <!-- ==================== COL TAG (UI column) ==================== -->
+    <tag>
+        <name>col</name>
+        <tag-class>uz.fido.abs.core.tag.ColumnTag</tag-class>
+        <body-content>empty</body-content>
+        <info>UI ustun — t:grid ichida. Qaysi field qanday chiqishini belgilaydi.</info>
+        <attribute>
+            <name>field</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Ko'rsatiladigan field nomi</description>
+        </attribute>
+        <attribute>
+            <name>title</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Ustun sarlavhasi (default: t:field dan)</description>
+        </attribute>
+        <attribute>
+            <name>format</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Format override (default: t:field dan)</description>
+        </attribute>
+        <attribute>
+            <name>link</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Havola shabloni: "detail.jsp?id={customer_id}"</description>
+        </attribute>
+        <attribute>
+            <name>badge</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Badge mapping: "VALUE:text:class,..."</description>
+        </attribute>
+        <attribute>
+            <name>align</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Tekislash: left, center, right</description>
+        </attribute>
+        <attribute>
+            <name>width</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Ustun kengligi: "120px", "15%"</description>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Qo'shimcha CSS class</description>
+        </attribute>
+        <attribute>
+            <name>footer</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>Footer da ko'rsatish</description>
+        </attribute>
+        <attribute>
+            <name>footerFunc</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Footer funksiyasi: sum, count, avg</description>
+        </attribute>
+        <attribute>
+            <name>editable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>JSON/datagrid rejimida tahrir mumkin</description>
+        </attribute>
+        <attribute>
+            <name>editType</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Tahrir input turi: text, select, number, date</description>
+        </attribute>
+        <attribute>
+            <name>editOptions</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Select tahrir uchun variantlar</description>
+        </attribute>
+        <attribute>
+            <name>sortable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+            <description>Ustun bo'yicha saralash (default: true). "false" = saralanmaydi</description>
+        </attribute>
+    </tag>
+
+    <!-- ==================== LEGACY ==================== -->
+    <tag>
+        <name>data</name>
+        <tag-class>uz.fido.abs.core.tag.DataTag</tag-class>
+        <body-content>JSP</body-content>
+        <info>[LEGACY] View dan data oladi</info>
+        <attribute><name>var</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>view</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>orderBy</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+        <attribute><name>pageSize</name><required>false</required><rtexprvalue>true</rtexprvalue><type>int</type></attribute>
+        <attribute><name>columns</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+    </tag>
+
+</taglib>
