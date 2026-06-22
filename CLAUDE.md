@@ -218,8 +218,10 @@ oracle-test-project/
 00_ref_spravochniklar.sql  # core_ref_currency/client_type/region/coa/branch (СПР 17/21/52/19/12; 4255 qator). Gen: docs/ref/gen_ref_sql.py (spr-12 .xls -> xlrd)
 01_acc_util.sql            # core_acc_util — 20-xonali hisob raqami + Mod-11 kontrol kalit (real SIRIUS, Oracle'da tekshirilgan)
 02_auth_setup.sql          # Autentifikatsiya (admin/Admin@123) — infra (demo'dan ko'chirilgan)
-20_acc_schema.sql          # core_acc_accounts (real SIRIUS «Счета») + core_acc_status (14 holat lookup) + sequence + BIU trigger + 6 index. acctest'da end-to-end tekshirilgan.
-# Keyingi F0: 10_cif_schema (real kartochka + НИББД client_code), core_acc paketlar (SIRIUS const/types/util/repo/rules/service qatlam), viewlar, НИББД interfeys
+10_cif_schema.sql          # core_cif_clients (real SIRIUS физ/юр/ИП) + individual/legal + founders/managers/documents/addresses/contacts/beneficiaries/roles/arrests + core_cif_status (12 holat). client_code TURGA BOG'LIQ: fiz avto 60000000-69999999, yur/ИП НИББД tashqi. 12 jadval.
+20_acc_schema.sql          # core_acc_accounts (real SIRIUS «Счета») + core_acc_status (14 holat) + sequence + BIU trigger + index + account->client FK (core_cif_clients). acctest'da end-to-end tekshirilgan.
+# Yuklash tartibi: 10_cif (klient) 20_acc (hisob) dan OLDIN — account->client FK shunga bog'liq.
+# Keyingi F0: core_cif + core_acc SIRIUS paketlar (const/types/util/logger/data_reader/repo/rules/service), viewlar, НИББД interfeys. Paketlarda har bir proc/func divider izoh bilan ajratilsin.
 
 # === DEMO (prototip) — ARXIVLANGAN: docker/oracle/init-demo-archive/ (mount QILINMAYDI, o'chirilmagan) ===
 # 01..15 (cif/acc/auth demo, 17 skript) — qaytarib bo'ladi. To'liq demo oracle-test-project'da saqlanadi.
