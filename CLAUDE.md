@@ -249,6 +249,15 @@ Trigger:    core_cif_customers_biu_trg
 - **fieldMetas pattern** — FieldTag metadata ni ro'yxatga oladi, ColumnTag undan default oladi
 - **Data vs UI ajratish** — t:field (nima ko'rsatiladi) ≠ t:col (qanday ko'rsatiladi)
 - **Pul = TIYIN (eng kichik birlik), DB tipi `NUMBER(20)` butun son** — barcha summa/saldo/oborot maydonlari tiyin (cent) da butun son sifatida saqlanadi (1 so'm = 100 tiyin; scale YO'Q, float/double HECH QACHON). UI da `/100` ko'rsatiladi, Java'da `BigDecimal`/`long`. Real `core_acc_accounts` saldo/oborot ustunlari shunday; yangi modullarda ham (masalan `core_cif` уставный капитал) shu qoida.
+- **PL/SQL paket uslubi — har bir procedure/function ajratilsin** — paket (body) ichida har bir procedura va funksiya oldidan ajratuvchi izoh chizig'i qo'yilsin, masalan:
+  ```sql
+  -- ---------------------------------------------------------------------------
+  -- Open_Account — yangi hisob ochish (Maker)
+  -- ---------------------------------------------------------------------------
+  PROCEDURE Open_Account(...) IS ...
+  ```
+  SIRIUS qatlam paketlari (const/types/util/logger/data_reader/repo/rules/service) shu uslubda yoziladi — o'qilishi oson bo'lsin.
+- **client_code = 8 xona (НИББД)** — mijoz kodi 8 raqamli (fiz `60000000-69999999`, ПМ «Клиенты» generatsiya; yur/ИП НИББД tashqi). Hisob raqamining `XXXXXXXX` segmenti shu. (Spec реквizit-jadvalidagi "5" — xato; hisob raqami/kalit hisobi 8 знаков talab qiladi.)
 - **Maker-Checker** — ikki bosqichli tasdiqlash (Operator yaratadi, Supervisor tasdiqlaydi)
 - **CIF format** — CIF-YYYYMMDD-NNNNNN (sequence orqali)
 - **Status workflow** — ACTIVE → BLOCKED → CLOSED (CLOSED dan qaytish YO'Q)
