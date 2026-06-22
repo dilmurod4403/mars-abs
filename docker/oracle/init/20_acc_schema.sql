@@ -3,7 +3,8 @@
 -- 20_acc_schema.sql — core_acc_accounts (SIRIUS «Счета» — hisoblar moduli)
 --
 -- Oracle 21c XE. Naming: MARS konvensiyasi (core_acc_*).
--- Pul/saldo/oborot ustunlari — har doim NUMBER (float/double HECH QACHON).
+-- Pul/saldo/oborot — eng kichik birlikda (TIYIN/cent), butun son NUMBER(20).
+-- Scale/float/double HECH QACHON. 1 so'm = 100 tiyin (UI da /100 ko'rsatiladi).
 -- Hisob raqami (20 xona): CMMSS(5) + VVV(3) + K(1) + XXXXXXXX(8) + NNN(3)
 --   CMMSS    — Балансовый номер (balans hisobi, core_ref_coa, СПР 19)
 --   VVV      — Код валюты (valyuta, core_ref_currency, СПР 017; so'm = '000')
@@ -15,7 +16,7 @@
 --   * 20-xonali hisob raqami реквизит kod-nomi  = `code`  (DDL: account_number, izoh alias)
 --   * Lifecycle «Состояние счета»                = `state`  (FK core_acc_status)
 --   * M/O «Статус счета» (O-ВТОРИЧНЫЙ/M-ПЕРВИЧНЫЙ)= `status` (CHECK M/O, auto-assign)
---   * Pul (F tipi) формат = number(20,2)          → NUMBER(20,2)
+--   * Pul (F tipi) — eng kichik birlikda (tiyin)  → NUMBER(20) butun son
 --   * реквизит `client_code` = K, size 5          → VARCHAR2(5)
 --
 -- Old shartlar: core_ref_* (00_ref_spravochniklar.sql) va
@@ -141,19 +142,19 @@ CREATE TABLE core_acc_accounts (
     branch_cb_code    VARCHAR2(5),                            -- Код офиса банковских услуг (СПР 012)
 
     -- --- Saldo / oborot — barchasi NUMBER (F tipi = number(20,2), float YO'Q)
-    saldo_in          NUMBER(20,2)  DEFAULT 0 NOT NULL,       -- Входящий сальдо
-    saldo_out         NUMBER(20,2)  DEFAULT 0 NOT NULL,       -- Исходящий сальдо (= Остаток счета)
-    saldo_equival_in  NUMBER(20,2)  DEFAULT 0 NOT NULL,       -- Входящий сальдо в эквиваленте
-    saldo_equival_out NUMBER(20,2)  DEFAULT 0 NOT NULL,       -- Исходящий сальдо в эквиваленте
-    saldo_unlead      NUMBER(20,2)  DEFAULT 0 NOT NULL,       -- Непроведённый сальдо (Не проведённый остаток)
-    turnover_debit       NUMBER(20,2) DEFAULT 0 NOT NULL,     -- Дебетовый оборот за день
-    turnover_credit      NUMBER(20,2) DEFAULT 0 NOT NULL,     -- Кредитовый оборот за день
-    turnover_all_debit   NUMBER(20,2) DEFAULT 0 NOT NULL,     -- Дебетовый оборот за весь период
-    turnover_all_credit  NUMBER(20,2) DEFAULT 0 NOT NULL,     -- Кредитовый оборот за весь период
-    eqv_turnover_debit       NUMBER(20,2) DEFAULT 0 NOT NULL, -- Дебетовый оборот за день, в эквиваленте
-    eqv_turnover_credit      NUMBER(20,2) DEFAULT 0 NOT NULL, -- Кредитовый оборот за день, в эквиваленте
-    eqv_turnover_all_debit   NUMBER(20,2) DEFAULT 0 NOT NULL, -- Дебетовый оборот за весь период, в эквиваленте
-    eqv_turnover_all_credit  NUMBER(20,2) DEFAULT 0 NOT NULL, -- Кредитовый оборот за весь период, в эквиваленте
+    saldo_in          NUMBER(20)  DEFAULT 0 NOT NULL,       -- Входящий сальдо
+    saldo_out         NUMBER(20)  DEFAULT 0 NOT NULL,       -- Исходящий сальдо (= Остаток счета)
+    saldo_equival_in  NUMBER(20)  DEFAULT 0 NOT NULL,       -- Входящий сальдо в эквиваленте
+    saldo_equival_out NUMBER(20)  DEFAULT 0 NOT NULL,       -- Исходящий сальдо в эквиваленте
+    saldo_unlead      NUMBER(20)  DEFAULT 0 NOT NULL,       -- Непроведённый сальдо (Не проведённый остаток)
+    turnover_debit       NUMBER(20) DEFAULT 0 NOT NULL,     -- Дебетовый оборот за день
+    turnover_credit      NUMBER(20) DEFAULT 0 NOT NULL,     -- Кредитовый оборот за день
+    turnover_all_debit   NUMBER(20) DEFAULT 0 NOT NULL,     -- Дебетовый оборот за весь период
+    turnover_all_credit  NUMBER(20) DEFAULT 0 NOT NULL,     -- Кредитовый оборот за весь период
+    eqv_turnover_debit       NUMBER(20) DEFAULT 0 NOT NULL, -- Дебетовый оборот за день, в эквиваленте
+    eqv_turnover_credit      NUMBER(20) DEFAULT 0 NOT NULL, -- Кредитовый оборот за день, в эквиваленте
+    eqv_turnover_all_debit   NUMBER(20) DEFAULT 0 NOT NULL, -- Дебетовый оборот за весь период, в эквиваленте
+    eqv_turnover_all_credit  NUMBER(20) DEFAULT 0 NOT NULL, -- Кредитовый оборот за весь период, в эквиваленте
 
     -- --- Парные счета (контрсчёт) ------------------------------------------
     --     Avtoritetli manba: SIRIUS «Справочник парных счетов»
@@ -236,7 +237,7 @@ COMMENT ON COLUMN core_acc_accounts.state              IS 'Состояние с
 COMMENT ON COLUMN core_acc_accounts.status             IS 'Статус счета — SIRIUS реквизит kod-nomi `status`: M=ПЕРВИЧНЫЙ (asosiy), O=ВТОРИЧНЫЙ (auto-assign справочник bo''yicha)';
 COMMENT ON COLUMN core_acc_accounts.branch_code        IS 'Код филиала — FK core_ref_branch (СПР 012)';
 COMMENT ON COLUMN core_acc_accounts.branch_cb_code     IS 'Код офиса банковских услуг (СПР 012)';
-COMMENT ON COLUMN core_acc_accounts.saldo_out          IS 'Исходящий сальдо = Остаток счета (NUMBER(20,2), BigDecimal)';
+COMMENT ON COLUMN core_acc_accounts.saldo_out          IS 'Исходящий сальдо = Остаток счета (TIYIN — eng kichik birlik, NUMBER(20) butun)';
 COMMENT ON COLUMN core_acc_accounts.saldo_unlead       IS 'Непроведённый сальдо — Не проведённый остаток';
 COMMENT ON COLUMN core_acc_accounts.turnover_all_debit IS 'Дебетовый оборот за весь период';
 COMMENT ON COLUMN core_acc_accounts.turnover_all_credit IS 'Кредитовый оборот за весь период';

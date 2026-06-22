@@ -248,7 +248,7 @@ Trigger:    core_cif_customers_biu_trg
 - **Tag library** — t:table/field/filter + grid/col — deklarativ data grid
 - **fieldMetas pattern** — FieldTag metadata ni ro'yxatga oladi, ColumnTag undan default oladi
 - **Data vs UI ajratish** — t:field (nima ko'rsatiladi) ≠ t:col (qanday ko'rsatiladi)
-- **BigDecimal** — barcha pul summalari uchun (double/float HECH QACHON)
+- **Pul = TIYIN (eng kichik birlik), DB tipi `NUMBER(20)` butun son** — barcha summa/saldo/oborot maydonlari tiyin (cent) da butun son sifatida saqlanadi (1 so'm = 100 tiyin; scale YO'Q, float/double HECH QACHON). UI da `/100` ko'rsatiladi, Java'da `BigDecimal`/`long`. Real `core_acc_accounts` saldo/oborot ustunlari shunday; yangi modullarda ham (masalan `core_cif` уставный капитал) shu qoida.
 - **Maker-Checker** — ikki bosqichli tasdiqlash (Operator yaratadi, Supervisor tasdiqlaydi)
 - **CIF format** — CIF-YYYYMMDD-NNNNNN (sequence orqali)
 - **Status workflow** — ACTIVE → BLOCKED → CLOSED (CLOSED dan qaytish YO'Q)
