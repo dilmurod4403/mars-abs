@@ -214,23 +214,15 @@ oracle-test-project/
 ## DB Init Scripts (docker/oracle/init/)
 
 ```
-01_schema.sql              # Asosiy jadvallar (customers, accounts, transactions)
-01_cif_schema.sql          # CIF modul jadvallari
-02_seed.sql                # Boshlang'ich ma'lumotlar
-02_cif_indexes.sql         # CIF indekslar
-03_cif_sequences.sql       # CIF ketma-ketliklar
-04_cif_triggers.sql        # CIF triggerlar
-05_cif_packages.sql        # CIF PL/SQL paketlar
-06_cif_views.sql           # CIF viewlar
-07_cif_seed.sql            # CIF test ma'lumotlar
-08_cif_doc_contact_packages.sql
-09_cif_additional_views.sql
-10_cif_unit_tests.sql
-11_acc_schema.sql          # core_acc jadvallar + sequence + indekslar
-12_acc_packages.sql        # core_acc SIRIUS paketlar (8 ta) + BI trigger
-13_acc_views.sql           # core_acc viewlar (6 ta)
-14_acc_seed.sql            # core_acc test ma'lumotlar (9 hisob)
-15_auth_setup.sql          # Autentifikatsiya (admin/Admin@123)
+# === REAL build (F0+) — cutover 2026-06-22 ===
+00_ref_spravochniklar.sql  # core_ref_currency/client_type/region/coa (СПР 17/21/52/19; 2148 qator). Gen: docs/ref/gen_ref_sql.py
+01_acc_util.sql            # core_acc_util — 20-xonali hisob raqami + Mod-11 kontrol kalit (real SIRIUS, Oracle'da tekshirilgan)
+02_auth_setup.sql          # Autentifikatsiya (admin/Admin@123) — infra (demo'dan ko'chirilgan)
+# Keyingi F0: 10_cif_schema (real kartochka), 20_acc_schema (real core_acc_accounts: balance/ccy/key/client/seq, 13 holat, primary/secondary), paketlar (SIRIUS qatlam), viewlar, НИББД interfeys
+
+# === DEMO (prototip) — ARXIVLANGAN: docker/oracle/init-demo-archive/ (mount QILINMAYDI, o'chirilmagan) ===
+# 01..15 (cif/acc/auth demo, 17 skript) — qaytarib bo'ladi. To'liq demo oracle-test-project'da saqlanadi.
+# Eslatma: arxiv core_acc_util (eski 7-3-1) bilan to'qnashmaslik uchun mount'dan chiqarilgan.
 ```
 
 ## DB Naming Convention
@@ -318,6 +310,13 @@ Output:         out_report, out_cbu, out_statement, out_notification
 
 ## Joriy holat va keyingi qadamlar
 
+### 🎯 Strategik yo'nalish — REAL SIRIUS build (mars-abs)
+- **Qaror (2026-06-22):** `mars-abs` — Fido Bank SIRIUS «Клиенты и счета» spetsifikatsiyasiga SODIQ (production-paritet) real tizim quriladigan loyiha. `oracle-test-project` — o'quv prototipi bo'lib qoladi.
+- **Asos:** SIRIUS Confluence hujjatlari (`docs/Счета.doc`, `Физическое+лицо.doc`, `Юридическое+лицо+и+ИП.doc`) — real hisob kodlash (CMMSS+VVV+K+kod8+NNN), **Mod-11 kontrol kalit** (ASCII qo'shni-raqam), НИББД integratsiya, AML/единое окно, 13 holat, birlamchi/ikkilamchi hisob, COA/тип/субсчет.
+- **TZ-003** (`docs/generate-tz003.js` → docx) — shu real build texnik topshirig'i, F0→F5 roadmap.
+- **Reference qatlami (F0):** SIRIUS spravochniklar (`docs/ref/spr-*.xlsx`) → `core_ref_*` jadval+seed, `docs/ref/gen_ref_sql.py` generatori orqali → `docs/ref/generated/00_ref_spravochniklar.sql`: core_ref_currency (СПР17, 213), core_ref_client_type (СПР21, 15), core_ref_region (СПР52, 230), core_ref_coa (СПР19 План счетов, 1690). `spr-12` (filial/MFO) — xlsx kutilmoqda → core_ref_branch.
+- **Eslatma:** quyidagi "✅ Bajarilgan core_cif/core_acc" — bu **DEMO darajasi** (prototipdan meros). Real build ularni SIRIUS spetsifikatsiyasiga ko'taradi (TZ-003): hisob raqami formati (valyuta o'rtada), Mod-11 kalit, НИББД, AML, COA, birlamchi/ikkilamchi.
+
 ### ✅ Bajarilgan — core_cif (Mijozlar moduli)
 - **Sahifalar**: login (zamonaviy split-screen), dashboard (stat kartalar + progress-bar + tezkor havola kartalari), customer list/create/edit/detail/approve, expired-docs, pep-report; admin user list/create/edit
 - **Auth**: `core_auth_service.Authenticate_User` + session; `AuthFilter` (rol tekshiruv + barcha HTML'ga no-cache); login `admin/Admin@123`
@@ -351,8 +350,9 @@ Output:         out_report, out_cbu, out_statement, out_notification
 | TZ-001 | core_cif | ⏳ Tekshiruvda (eskirgan: servlet/DAO tasvirlaydi, real = PL/SQL+JSP+Mars) |
 | BT-002 | core_acc | ✅ Tayyor |
 | TZ-002 | core_acc | ✅ Implement qilindi (DB + JSP) — real MARS arxitekturasi (PL/SQL SIRIUS + JSP/Mars) |
+| TZ-003 | Клиенты и счета (real SIRIUS) | 🟢 Qoralama — production-paritet build (mars-abs); F0→F5 roadmap; `docs/generate-tz003.js`. F0 boshlanmoqda |
 
-**Hujjat generatorlari**: `docs/generate-{bt001,bt002,tz001,tz002}.js` (Node + `docx` kutubxonasi). Tahrirlash: JS ni o'zgartirib `node docs/generate-tzNNN.js` ishga tushiring.
+**Hujjat generatorlari**: `docs/generate-{bt001,bt002,tz001,tz002,tz003}.js` (Node + `docx`). Reference SQL: `docs/ref/gen_ref_sql.py` (СПР xlsx → `core_ref_*`). Tahrirlash: generatorni o'zgartirib qayta ishga tushiring.
 
 **BT** = Biznes Talab (NIMA kerak, biznes tilida — VARCHAR2/NUMBER HECH QACHON)
 **TZ** = Texnik Topshiriq (QANDAY qilinadi — jadvallar, kodlar, PL/SQL)

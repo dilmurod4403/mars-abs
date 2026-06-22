@@ -1,0 +1,10 @@
+node_modules/
+target/
+*.class
+*.jar
+*.war
+*.iml
+.idea/
+.DS_Store
+~$*
+docs/ref/generated/
