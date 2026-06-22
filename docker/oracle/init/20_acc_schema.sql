@@ -205,8 +205,9 @@ CREATE TABLE core_acc_accounts (
     CONSTRAINT core_acc_accounts_coa_fk    FOREIGN KEY (balance_account) REFERENCES core_ref_coa(code),
     CONSTRAINT core_acc_accounts_curr_fk   FOREIGN KEY (currency_code)   REFERENCES core_ref_currency(code),
     CONSTRAINT core_acc_accounts_branch_fk FOREIGN KEY (branch_code)     REFERENCES core_ref_branch(code),
-    CONSTRAINT core_acc_accounts_pair_fk   FOREIGN KEY (paired_account_id) REFERENCES core_acc_accounts(account_id)
-    -- client_id FK -> core_cif_clients: core_cif hali qurilmagan, KEYIN qo'shiladi
+    CONSTRAINT core_acc_accounts_pair_fk   FOREIGN KEY (paired_account_id) REFERENCES core_acc_accounts(account_id),
+    -- client_id -> core_cif_clients (10_cif_schema 20_acc'dan oldin yuklanadi)
+    CONSTRAINT core_acc_accounts_client_fk FOREIGN KEY (client_id)         REFERENCES core_cif_clients(client_id)
 );
 
 -- --- Jadval / ustun izohlari (SIRIUS terminlarga moslash) ------------------
