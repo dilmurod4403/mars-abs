@@ -215,10 +215,11 @@ oracle-test-project/
 
 ```
 # === REAL build (F0+) — cutover 2026-06-22 ===
-00_ref_spravochniklar.sql  # core_ref_currency/client_type/region/coa (СПР 17/21/52/19; 2148 qator). Gen: docs/ref/gen_ref_sql.py
+00_ref_spravochniklar.sql  # core_ref_currency/client_type/region/coa/branch (СПР 17/21/52/19/12; 4255 qator). Gen: docs/ref/gen_ref_sql.py (spr-12 .xls -> xlrd)
 01_acc_util.sql            # core_acc_util — 20-xonali hisob raqami + Mod-11 kontrol kalit (real SIRIUS, Oracle'da tekshirilgan)
 02_auth_setup.sql          # Autentifikatsiya (admin/Admin@123) — infra (demo'dan ko'chirilgan)
-# Keyingi F0: 10_cif_schema (real kartochka), 20_acc_schema (real core_acc_accounts: balance/ccy/key/client/seq, 13 holat, primary/secondary), paketlar (SIRIUS qatlam), viewlar, НИББД interfeys
+20_acc_schema.sql          # core_acc_accounts (real SIRIUS «Счета») + core_acc_status (14 holat lookup) + sequence + BIU trigger + 6 index. acctest'da end-to-end tekshirilgan.
+# Keyingi F0: 10_cif_schema (real kartochka + НИББД client_code), core_acc paketlar (SIRIUS const/types/util/repo/rules/service qatlam), viewlar, НИББД interfeys
 
 # === DEMO (prototip) — ARXIVLANGAN: docker/oracle/init-demo-archive/ (mount QILINMAYDI, o'chirilmagan) ===
 # 01..15 (cif/acc/auth demo, 17 skript) — qaytarib bo'ladi. To'liq demo oracle-test-project'da saqlanadi.
@@ -314,7 +315,7 @@ Output:         out_report, out_cbu, out_statement, out_notification
 - **Qaror (2026-06-22):** `mars-abs` — Fido Bank SIRIUS «Клиенты и счета» spetsifikatsiyasiga SODIQ (production-paritet) real tizim quriladigan loyiha. `oracle-test-project` — o'quv prototipi bo'lib qoladi.
 - **Asos:** SIRIUS Confluence hujjatlari (`docs/Счета.doc`, `Физическое+лицо.doc`, `Юридическое+лицо+и+ИП.doc`) — real hisob kodlash (CMMSS+VVV+K+kod8+NNN), **Mod-11 kontrol kalit** (ASCII qo'shni-raqam), НИББД integratsiya, AML/единое окно, 13 holat, birlamchi/ikkilamchi hisob, COA/тип/субсчет.
 - **TZ-003** (`docs/generate-tz003.js` → docx) — shu real build texnik topshirig'i, F0→F5 roadmap.
-- **Reference qatlami (F0):** SIRIUS spravochniklar (`docs/ref/spr-*.xlsx`) → `core_ref_*` jadval+seed, `docs/ref/gen_ref_sql.py` generatori orqali → `docs/ref/generated/00_ref_spravochniklar.sql`: core_ref_currency (СПР17, 213), core_ref_client_type (СПР21, 15), core_ref_region (СПР52, 230), core_ref_coa (СПР19 План счетов, 1690). `spr-12` (filial/MFO) — xlsx kutilmoqda → core_ref_branch.
+- **Reference qatlami (F0):** SIRIUS spravochniklar (`docs/ref/spr-*.xlsx`) → `core_ref_*` jadval+seed, `docs/ref/gen_ref_sql.py` generatori orqali → `docs/ref/generated/00_ref_spravochniklar.sql`: core_ref_currency (СПР17, 213), core_ref_client_type (СПР21, 15), core_ref_region (СПР52, 230), core_ref_coa (СПР19 План счетов, 1690), core_ref_branch (СПР12 filial/MFO, 2107 — `spr-12.xls` xlrd orqali). Jami 4255 qator, Oracle'da tekshirilgan.
 - **Eslatma:** quyidagi "✅ Bajarilgan core_cif/core_acc" — bu **DEMO darajasi** (prototipdan meros). Real build ularni SIRIUS spetsifikatsiyasiga ko'taradi (TZ-003): hisob raqami formati (valyuta o'rtada), Mod-11 kalit, НИББД, AML, COA, birlamchi/ikkilamchi.
 
 ### ✅ Bajarilgan — core_cif (Mijozlar moduli)
