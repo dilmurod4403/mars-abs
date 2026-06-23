@@ -1,0 +1,42 @@
+# MARS ABS — alohida REAL build stack (oracle-test-project bilan parallel)
+# Portlar: Oracle 1522, Tomcat 8081 (oracle-bank-db:1521 / bank-tomcat:8080 ga tegmaydi)
+# Ishga tushirish: docker compose -p mars-abs -f docker-compose.mars.yml up -d
+# Init: docker/oracle/init/*.sql (00_ref..50_views) bankuser (APP_USER) ga yuklanadi.
+version: '3.8'
+
+services:
+  mars-oracle:
+    image: gvenzl/oracle-xe:21-slim
+    platform: linux/amd64
+    container_name: mars-oracle
+    environment:
+      ORACLE_PASSWORD: BankAdmin123
+      APP_USER: bankuser
+      APP_USER_PASSWORD: BankUser123
+    ports:
+      - "1522:1521"
+    volumes:
+      - mars-oracle-data:/opt/oracle/oradata
+      - ./docker/oracle/init:/container-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 20s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+
+  mars-tomcat:
+    image: tomcat:9-jdk17-temurin
+    container_name: mars-tomcat
+    ports:
+      - "8081:8080"
+    depends_on:
+      mars-oracle:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:oracle:thin:@mars-oracle:1521/XEPDB1
+      DB_USER: bankuser
+      DB_PASSWORD: BankUser123
+
+volumes:
+  mars-oracle-data:

@@ -84,7 +84,7 @@
             if (ipDobStr        != null && ipDobStr.isEmpty())        ipDobStr        = null;
             if (ipDocIssueDateStr != null && ipDocIssueDateStr.isEmpty()) ipDocIssueDateStr = null;
 
-            Mars.ProcedureBuilder proc = Mars.procedure("core_cif_service.Register_Client")
+            Mars proc = Mars.procedure("core_cif_service.Register_Client")
                 .record("v_rec", "core_cif_types.t_client_rec")
                     .field("client_kind",    kind)
                     .field("client_type",    clientType)
