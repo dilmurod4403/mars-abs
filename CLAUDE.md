@@ -220,9 +220,10 @@ oracle-test-project/
 02_auth_setup.sql          # Autentifikatsiya (admin/Admin@123) — infra (demo'dan ko'chirilgan)
 10_cif_schema.sql          # core_cif_clients (real SIRIUS физ/юр/ИП) + individual/legal + founders/managers/documents/addresses/contacts/beneficiaries/roles/arrests + core_cif_status (12 holat). client_code TURGA BOG'LIQ: fiz avto 60000000-69999999, yur/ИП НИББД tashqi. 12 jadval.
 20_acc_schema.sql          # core_acc_accounts (real SIRIUS «Счета») + core_acc_status (14 holat) + sequence + BIU trigger + index + account->client FK (core_cif_clients). acctest'da end-to-end tekshirilgan.
-30_cif_packages.sql        # core_cif SIRIUS qatlam (18 paket: const/types/util/logger/aml/nibbd/data_reader/repo/rules/service). KLIENT OCHISH: Register_Client (физ/юр/ИП) + Approve_Client (Maker-Checker + AML/НИББД gate). acctest+mars'da tekshirilgan.
-# Yuklash tartibi: 10_cif (klient) 20_acc (hisob) dan OLDIN — account->client FK shunga bog'liq. Paketlar (30_cif) schema'lardan keyin.
-# Keyingi F0: core_acc SIRIUS paketlar (40_acc — HISOB OCHISH: Open_Account, Maker-Checker), viewlar, JSP ekranlar. core_cif paketlar ✅.
+30_cif_packages.sql        # core_cif SIRIUS qatlam (18 paket). KLIENT OCHISH: Register_Client (физ/юр/ИП) + Approve_Client (Maker-Checker + AML/НИББД gate). acctest+mars'da tekshirilgan.
+40_acc_packages.sql        # core_acc SIRIUS qatlam (20 paket). HISOB OCHISH: Open_Account (balans turdan AUTO, seq AUTO, M/O AUTO, klient APPROVED shart) + Approve_Account (Maker-Checker). acctest+mars'da end-to-end tekshirilgan.
+# Yuklash tartibi: 00_ref -> 01_acc_util -> 10_cif -> 20_acc -> 30_cif -> 40_acc (klient schema hisobdan oldin; paketlar schema'lardan keyin).
+# Keyingi F0: viewlar (ro'yxat/detail) + JSP ekranlar (klient ochish, hisob ochish formalar). core_cif + core_acc paketlar ✅ (klient ochish + hisob ochish ishlaydi).
 
 # === DEMO (prototip) — ARXIVLANGAN: docker/oracle/init-demo-archive/ (mount QILINMAYDI, o'chirilmagan) ===
 # 01..15 (cif/acc/auth demo, 17 skript) — qaytarib bo'ladi. To'liq demo oracle-test-project'da saqlanadi.
