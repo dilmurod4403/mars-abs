@@ -107,7 +107,7 @@ const titlePage = [
   }),
   new Paragraph({
     alignment: AlignmentType.CENTER, spacing: { after: 100 },
-    children: [new TextRun({ text: "BT-003: Pul o'tkazmalari moduli (core_trx)", font: "Arial", size: 28, color: DARK_GRAY })]
+    children: [new TextRun({ text: "BT-003: core_ac — Buxgalteriya yadrosi (core accounting): Pul o'tkazmalari", font: "Arial", size: 28, color: DARK_GRAY })]
   }),
   new Paragraph({
     alignment: AlignmentType.CENTER, spacing: { after: 100 },
@@ -121,7 +121,7 @@ const titlePage = [
       new TableRow({ children: [cell("Hujjat raqami:", 2000, { bold: true }), cell("BT-003", 3000)] }),
       new TableRow({ children: [cell("Versiya:", 2000, { bold: true, shaded: true }), cell("1.0", 3000, { shaded: true })] }),
       new TableRow({ children: [cell("Sana:", 2000, { bold: true }), cell("2026-06-24", 3000)] }),
-      new TableRow({ children: [cell("Modul:", 2000, { bold: true, shaded: true }), cell("core_trx (Pul o'tkazmalari)", 3000, { shaded: true })] }),
+      new TableRow({ children: [cell("Modul:", 2000, { bold: true, shaded: true }), cell("core_ac (Pul o'tkazmalari)", 3000, { shaded: true })] }),
       new TableRow({ children: [cell("Holat:", 2000, { bold: true }), cell("Qoralama", 3000)] }),
       new TableRow({ children: [cell("Muallif:", 2000, { bold: true, shaded: true }), cell("MARS loyiha guruhi", 3000, { shaded: true })] }),
     ]
@@ -141,7 +141,7 @@ const section1 = [
   heading("1. Umumiy ma'lumot", HeadingLevel.HEADING_1),
 
   heading("1.1. Maqsad", HeadingLevel.HEADING_2),
-  body("Ushbu hujjat MARS avtomatlashtirilgan bank tizimining Pul o'tkazmalari moduli (core_trx) uchun biznes talablarni belgilaydi."),
+  body("Ushbu hujjat MARS avtomatlashtirilgan bank tizimining Pul o'tkazmalari moduli (core_ac) uchun biznes talablarni belgilaydi."),
   body("Modul bank mijozlarining hisoblari o'rtasida pul mablag'larini ko'chirish — o'tkazma yaratish, tasdiqlash, bajarish (chiqim/kirim), rad etish va qaytarish (storno), shuningdek o'tkazmalar tarixini yuritish jarayonlarini markazlashtirilgan holda boshqarish uchun mo'ljallangan."),
   body("Modul Hisoblar moduli (core_acc) bilan chambarchas bog'liq: har bir o'tkazma kamida bitta hisobni chiqim (debet) va bitta hisobni kirim (kredit) qiladi, natijada hisob qoldig'i (saldo) o'zgaradi. O'tkazma core_acc dagi hisob holati, valyuta va qoldiq qoidalariga to'liq bo'ysunadi."),
   body("Modulning asosiy maqsadlari:"),
@@ -169,9 +169,9 @@ const section1 = [
   spacer(),
   body("Hujjat qamramaydi:", { bold: true }),
   bullet("Naqd pul kirim/chiqim operatsiyalari (op_cash / op_teller moduli mas'uliyati)"),
-  bullet("Bosh kitobdagi (General Ledger) buxgalteriya provodkalarini yuritish tafsilotlari (core_gl moduli; core_trx faqat hisob qoldig'i darajasida ishlaydi)"),
+  bullet("Bosh kitobdagi (General Ledger) buxgalteriya provodkalarini yuritish tafsilotlari (core_gl moduli; core_ac faqat hisob qoldig'i darajasida ishlaydi)"),
   bullet("Hisob ochish/yopish va holat boshqaruvi (core_acc moduli)"),
-  bullet("Operatsion kunni ochish va yopish (core_gl / core_adm moduli mas'uliyati; core_trx faqat ochiq kun ma'lumotidan foydalanadi)"),
+  bullet("Operatsion kunni ochish va yopish (core_gl / core_adm moduli mas'uliyati; core_ac faqat ochiq kun ma'lumotidan foydalanadi)"),
 
   heading("1.3. Maqsadli auditoriya", HeadingLevel.HEADING_2),
   body("Ushbu hujjat quyidagi tomonlar uchun mo'ljallangan:"),
@@ -220,7 +220,7 @@ const section1 = [
 // ===== 2. BIZNES JARAYONLAR =====
 const section2 = [
   heading("2. Biznes jarayonlar", HeadingLevel.HEADING_1),
-  body("Quyida core_trx modulining asosiy biznes jarayonlari (BP — Business Process) qadamma-qadam keltirilgan. Jarayonlar Maker-Checker tamoyiliga asoslanadi: o'tkazmani operator yaratadi (Maker), supervisor tasdiqlaydi va bajaradi (Checker)."),
+  body("Quyida core_ac modulining asosiy biznes jarayonlari (BP — Business Process) qadamma-qadam keltirilgan. Jarayonlar Maker-Checker tamoyiliga asoslanadi: o'tkazmani operator yaratadi (Maker), supervisor tasdiqlaydi va bajaradi (Checker)."),
 
   // --- BP-001 ---
   heading("2.1. BP-001: Ichki o'tkazma yaratish", HeadingLevel.HEADING_2),
@@ -570,7 +570,7 @@ const section4 = [
     columnWidths: QCOLS,
     rows: [
       brHeader(),
-      brRow("BR-023", "O'tkazmalar faqat ochiq operatsion kun doirasida bajariladi. Operatsion kunni ochish/yopish core_gl/core_adm mas'uliyatida; core_trx ochiq kun ma'lumotidan foydalanadi.", "Yuqori", "Ikkala", false),
+      brRow("BR-023", "O'tkazmalar faqat ochiq operatsion kun doirasida bajariladi. Operatsion kunni ochish/yopish core_gl/core_adm mas'uliyatida; core_ac ochiq kun ma'lumotidan foydalanadi.", "Yuqori", "Ikkala", false),
       brRow("BR-024", "F0 fazada valyutalash sanasi joriy (bajarilgan) operatsion kunga teng bo'ladi. Orqaga sanali o'tkazma taqiqlanadi; kelajak sanali (rejalashtirilgan) o'tkazma keyingi fazaga rejalashtirilgan.", "O'rta", "Ikkala", true),
       brRow("BR-025", "Har bir o'tkazma operatsiyasi (yaratish, tasdiqlash, rad etish, bekor qilish, storno) audit logga yoziladi: kim, qachon, nima qilgan, sabab. Audit logni o'chirish yoki o'zgartirish mumkin emas.", "Yuqori", "Ikkala", false),
     ]
@@ -735,7 +735,7 @@ const section7 = [
 // ===== 8. INTEGRATSIYA TALABLARI =====
 const section8 = [
   heading("8. Integratsiya talablari", HeadingLevel.HEADING_1),
-  body("Pul o'tkazmalari moduli (core_trx) MARS tizimining boshqa modullari va tashqi tizimlar bilan quyidagicha o'zaro aloqada bo'ladi:"),
+  body("Pul o'tkazmalari moduli (core_ac) MARS tizimining boshqa modullari va tashqi tizimlar bilan quyidagicha o'zaro aloqada bo'ladi:"),
   spacer(),
   new Table({
     width: { size: CONTENT_WIDTH, type: WidthType.DXA },
@@ -894,7 +894,7 @@ const doc = new Document({
         children: [new Paragraph({
           alignment: AlignmentType.RIGHT,
           border: { bottom: { style: BorderStyle.SINGLE, size: 6, color: BLUE, space: 1 } },
-          children: [new TextRun({ text: "MARS ABS  |  BT-003  |  core_trx", font: "Arial", size: 18, color: "999999" })]
+          children: [new TextRun({ text: "MARS ABS  |  BT-003  |  core_ac", font: "Arial", size: 18, color: "999999" })]
         })]
       })
     },
@@ -931,7 +931,7 @@ const doc = new Document({
 });
 
 // ===== GENERATE =====
-const OUTPUT = require("path").join(__dirname, "BT-003_core_trx_pul_otkazmalari_biznes_talab.docx");
+const OUTPUT = require("path").join(__dirname, "BT-003_core_ac_pul_otkazmalari_biznes_talab.docx");
 Packer.toBuffer(doc).then(buf => {
   fs.writeFileSync(OUTPUT, buf);
   console.log(`Generated: ${OUTPUT}`);
