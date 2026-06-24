@@ -1,3 +1,11 @@
+-- gvenzl init (sqlplus / as sysdba, CDB-root) -> XEPDB1.BANKUSER. Manual load: no-op (USER<>SYS).
+BEGIN
+  IF USER = 'SYS' THEN
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CONTAINER = XEPDB1';
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = BANKUSER';
+  END IF;
+END;
+/
 -- 15_auth_setup.sql — MARS ABS Autentifikatsiya va foydalanuvchilar
 -- ============================================================================
 -- MARS ABS - Autentifikatsiya moduli

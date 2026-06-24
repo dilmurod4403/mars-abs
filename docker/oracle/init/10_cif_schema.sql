@@ -1,3 +1,11 @@
+-- gvenzl init (sqlplus / as sysdba, CDB-root) -> XEPDB1.BANKUSER. Manual load: no-op (USER<>SYS).
+BEGIN
+  IF USER = 'SYS' THEN
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CONTAINER = XEPDB1';
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = BANKUSER';
+  END IF;
+END;
+/
 -- ============================================================================
 -- MARS ABS (mars-abs) — REAL SIRIUS build, F0
 -- 10_cif_schema.sql — core_cif «Клиенты» (mijozlar moduli) — BAZA SXEMA (DDL)

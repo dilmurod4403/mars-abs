@@ -1,3 +1,11 @@
+-- gvenzl init (sqlplus / as sysdba, CDB-root) -> XEPDB1.BANKUSER. Manual load: no-op (USER<>SYS).
+BEGIN
+  IF USER = 'SYS' THEN
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CONTAINER = XEPDB1';
+    EXECUTE IMMEDIATE 'ALTER SESSION SET CURRENT_SCHEMA = BANKUSER';
+  END IF;
+END;
+/
 -- MARS ABS (mars-abs) — F0 reference qatlami (SIRIUS spravochniklar)
 -- Generator: docs/ref/gen_ref_sql.py — qayta yaratish uchun ishga tushiring.
 -- Manba: docs/ref/spr-17/19/21/52.xlsx + spr-12.xls (xlrd).
@@ -4349,4 +4357,3 @@ INSERT INTO core_ref_branch (code, name, adress, bank_type_code, region_code, di
 INSERT INTO core_ref_branch (code, name, adress, bank_type_code, region_code, district_code, header_code, status_code, account_type, active, condition) VALUES ('12369', 'ТОШКЕНТ Ш., `ТРАСТБАНК` ХАБ `QOZIROBOD` БХМ', '100115, Тошкент ш., Чилонзор т, Катта Чилонзор-2 МФЙ, 2-62-2', '030', '26', '208', '00491', '10', '0', 'A', 'A');
 INSERT INTO core_ref_branch (code, name, adress, bank_type_code, region_code, district_code, header_code, status_code, account_type, active, condition) VALUES ('11087', 'ХОНОБОД Ш., `УЗСАНОАТКУРИЛИШБАНКИ` АТБ ХОНОБОД БХМ', '171500, Хонобод ш., Анхор МФЙ, Хонобод к., 836', '003', '03', '003', '00440', '10', '0', 'A', 'A');
 COMMIT;
-
