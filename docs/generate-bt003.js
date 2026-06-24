@@ -212,6 +212,13 @@ const section1 = [
       new TableRow({ children: [cell("CIF", 2600), cell("Customer Information File — mijoz ma'lumotlar bazasi (core_cif)", 6760)] }),
       new TableRow({ children: [cell("UZS / USD / EUR", 2600, { shaded: true }), cell("O'zbekiston so'mi (kod 000), AQSh dollari (840), Yevro (978)", 6760, { shaded: true })] }),
       new TableRow({ children: [cell("Qo'sh yozuv (balansli)", 2600), cell("Har bir bajarilgan o'tkazmada jami chiqim summasi jami kirim summasiga teng bo'lishi (balans buzilmasligi)", 6760)] }),
+      new TableRow({ children: [cell("Provodka (buxgalteriya yozuvi)", 2600, { shaded: true }), cell("Qo'sh yozuvning bir bo'lagi — ma'lum hisobning debetiga (chiqim) yoki kreditiga (kirim) tegishli summani qayd etuvchi yagona buxgalteriya yozuvi", 6760, { shaded: true })] }),
+      new TableRow({ children: [cell("Provodkalar jurnali", 2600), cell("Barcha buxgalteriya yozuvlarining (provodkalarning) yagona xronologik registri; har bir yozuv ketma-ket qayd etiladi va o'zgartirilmaydi (faqat qo'shiladi — audit izi)", 6760)] }),
+      new TableRow({ children: [cell("Kiritilgan (Введён)", 2600, { shaded: true }), cell("Provodkaning boshlang'ich holati: yozuv kiritildi, ammo hisob qoldig'i va aylanmasiga hali ta'sir qilmaydi (qoralama yozuv)", 6760, { shaded: true })] }),
+      new TableRow({ children: [cell("Tekshirilgan (Проверен)", 2600), cell("Provodka tekshiruvdan o'tgan oraliq holati (Maker-Checker bo'yicha, ixtiyoriy); qoldiqqa hali ta'sir qilmaydi", 6760)] }),
+      new TableRow({ children: [cell("O'tkazilgan (Проведён)", 2600, { shaded: true }), cell("Provodka kitobga rasman o'tkazilgan holati: hisob qoldig'i va aylanmasiga ta'sir qiladi — pul haqiqatan harakatlanadi. Ijobiy-yakuniy holat (faqat storno orqali qaytariladi)", 6760, { shaded: true })] }),
+      new TableRow({ children: [cell("O'chirilgan (Удалён)", 2600), cell("Provodka faqat Kiritilgan yoki Tekshirilgan holatdan o'chiriladi (qoldiqqa ta'sir qilmasdan); O'tkazilgan provodkani o'chirib bo'lmaydi", 6760)] }),
+      new TableRow({ children: [cell("Storno (Сторнирован)", 2600, { shaded: true }), cell("O'tkazilgan (bajarilgan) provodka yoki o'tkazma teskari (qarshi) yozuv orqali bekor qilinishi; qoldiqlar dastlabki holatga qaytariladi, asl yozuv o'chirilmaydi", 6760, { shaded: true })] }),
     ]
   }),
   spacer(200),
@@ -354,8 +361,34 @@ const section2 = [
     ]
   }),
 
-  // --- BP-005 ---
-  heading("2.5. BP-005: Banklararo va byudjet o'tkazmalari (keyingi faza)", HeadingLevel.HEADING_2),
+  // --- BP-005 (Provodkalar jurnali) ---
+  heading("2.5. BP-005: Provodkalar jurnalini yuritish va ko'rish", HeadingLevel.HEADING_2),
+  body("Provodkalar jurnali — modulning buxgalteriya o'zagi: barcha buxgalteriya yozuvlarining (provodkalarning) yagona xronologik registri. Har bir o'tkazma bajarilganda hosil bo'lgan provodkalar shu jurnalga ketma-ket qayd etiladi. Bu jarayon provodkalar jurnali avtomatik to'ldirilishini va foydalanuvchi tomonidan ko'rilishini tavsiflaydi."),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: [2400, 6960],
+    rows: [
+      new TableRow({ children: [hCell("Xususiyat", 2400), hCell("Tavsif", 6960)] }),
+      new TableRow({ children: [cell("Jarayon ID", 2400), cell("BP-005", 6960)] }),
+      new TableRow({ children: [cell("Ishtirokchilar", 2400, { shaded: true }), cell("Tizim (avtomatik yozuv); Operator, Supervisor, Administrator, Auditor (ko'rish, huquqlariga muvofiq)", 6960, { shaded: true })] }),
+      new TableRow({ children: [cell("Kirish sharti", 2400), cell("O'tkazma bo'yicha provodkalar shakllantirilgan; foydalanuvchi tegishli ko'rish huquqiga ega", 6960)] }),
+      new TableRow({ children: [cell("Chiqish sharti", 2400, { shaded: true }), cell("Provodkalar jurnali xronologik tartibda ko'rsatilgan; har bir provodka holati va summasi ko'rinadi", 6960, { shaded: true })] }),
+    ]
+  }),
+  spacer(),
+  body("Jarayon qadamlari:", { bold: true }),
+  numberedItem("O'tkazma yaratilganda tizim unga mos provodkalarni \"Kiritilgan\" holatda jurnalga qo'shadi (qoldiqqa ta'sir qilmaydi — qoralama yozuv)"),
+  numberedItem("O'tkazma tasdiqlanib bajarilganda provodkalar \"O'tkazilgan\" holatga o'tadi va aynan shu payt hisob qoldig'i va aylanmasiga ta'sir qiladi"),
+  numberedItem("O'tkazma rad/bekor qilinsa provodkalar \"O'chirilgan\" holatga, storno qilinsa \"Storno\" holatga o'tadi va qarshi yozuvlar bilan bog'lanadi"),
+  numberedItem("Har bir provodka jurnalga xronologik (provodka sanasi va ketma-ketligi bo'yicha) qayd etiladi; mavjud yozuv o'zgartirilmaydi — faqat yangi yozuv qo'shiladi"),
+  numberedItem("Foydalanuvchi provodkalar jurnali ekranini ochib, yozuvlarni sana, hisob, holat, debet/kredit va bog'liq hujjat raqami bo'yicha filtrlaydi va ko'radi"),
+  numberedItem("Foydalanuvchi bitta provodkani tanlab, uning bog'liq o'tkazma hujjatiga (referens raqami orqali) o'tadi"),
+  spacer(),
+  body("Natija: provodkalar jurnali har bir o'tkazmaning buxgalteriya izini to'liq va o'zgartirib bo'lmas tarzda saqlaydi; jurnal Bosh kitob (core_gl) uchun birlamchi yozuv manbai bo'lib xizmat qiladi.", { italic: true }),
+  body("Muhim: Jurnal yozuvlari hech qachon o'chirilmaydi yoki tahrirlanmaydi — to'g'rilash faqat yangi (storno yoki tuzatuvchi) yozuv qo'shish orqali amalga oshadi.", { italic: true }),
+
+  // --- BP-006 ---
+  heading("2.6. BP-006: Banklararo va byudjet o'tkazmalari (keyingi faza)", HeadingLevel.HEADING_2),
   body("Quyidagi o'tkazma turlari keyingi fazada amalga oshiriladi va hozircha biznes talab darajasida qisqacha belgilanadi. Ular F0 yadroga kirmaydi."),
   spacer(),
   body("Banklararo o'tkazma:", { bold: true }),
@@ -468,6 +501,79 @@ const section3 = [
   }),
   spacer(),
   body("Muhim: Bajarilgan, Rad etilgan, Bekor qilingan va Storno holatlari yakuniy hisoblanadi — ularga qaytib o'zgartirish kiritib bo'lmaydi. Bajarilgan o'tkazmani tuzatishning yagona yo'li — storno.", { italic: true }),
+  spacer(200),
+
+  heading("3.4. Provodkalar jurnali (buxgalteriya registri)", HeadingLevel.HEADING_2),
+  body("Provodkalar jurnali — modulning markaziy buxgalteriya registri. U barcha buxgalteriya yozuvlarining (provodkalarning) yagona xronologik ro'yxati bo'lib, har bir provodka qo'sh yozuvning bir bo'lagini (ma'lum hisobning debetini yoki kreditini) qayd etadi. Jurnal o'zgartirilmaydi — unga faqat yangi yozuvlar qo'shiladi (to'liq audit izi). Quyida har bir jurnal yozuvi uchun saqlanadigan ma'lumotlar biznes tilida keltirilgan."),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: [3000, 4060, 2300],
+    rows: [
+      new TableRow({ children: [hCell("Ma'lumot", 3000), hCell("Mazmuni", 4060), hCell("Majburiyligi", 2300)] }),
+      new TableRow({ children: [cell("Provodka raqami", 3000), cell("Jurnal yozuvining noyob tartib raqami; tizim avtomatik beradi", 4060), cell("Avtomatik", 2300)] }),
+      new TableRow({ children: [cell("Bog'liq hujjat (referens) raqami", 3000, { shaded: true }), cell("Provodka qaysi o'tkazma hujjatidan kelib chiqqanini ko'rsatuvchi raqam", 4060, { shaded: true }), cell("Avtomatik", 2300, { shaded: true })] }),
+      new TableRow({ children: [cell("Provodka sanasi", 3000), cell("Provodka qayd etilgan operatsion kun", 4060), cell("Avtomatik", 2300)] }),
+      new TableRow({ children: [cell("Valyutalash sanasi", 3000, { shaded: true }), cell("Provodka qoldiqqa ta'sir qiladigan sana (F0 da — bajarilgan operatsion kun)", 4060, { shaded: true }), cell("Avtomatik", 2300, { shaded: true })] }),
+      new TableRow({ children: [cell("Debet hisob", 3000), cell("Chiqim (debet) qilinadigan hisob raqami", 4060), cell("Avtomatik", 2300)] }),
+      new TableRow({ children: [cell("Kredit hisob", 3000, { shaded: true }), cell("Kirim (kredit) qilinadigan hisob raqami", 4060, { shaded: true }), cell("Avtomatik", 2300, { shaded: true })] }),
+      new TableRow({ children: [cell("Summa", 3000), cell("Provodka summasi (tegishli valyutada, 2 kasr aniqligida)", 4060), cell("Avtomatik", 2300)] }),
+      new TableRow({ children: [cell("Valyuta", 3000, { shaded: true }), cell("Provodka valyutasi: UZS (000), USD (840), EUR (978)", 4060, { shaded: true }), cell("Avtomatik", 2300, { shaded: true })] }),
+      new TableRow({ children: [cell("Provodka holati", 3000), cell("Kiritilgan / Tekshirilgan / O'tkazilgan / O'chirilgan / Storno", 4060), cell("Avtomatik", 2300)] }),
+      new TableRow({ children: [cell("Operator", 3000, { shaded: true }), cell("Provodkani yaratgan/o'tkazgan xodim nomi", 4060, { shaded: true }), cell("Avtomatik", 2300, { shaded: true })] }),
+      new TableRow({ children: [cell("Izoh / maqsad", 3000), cell("Provodka mazmunini tavsiflovchi matn (o'tkazmaning to'lov maqsadidan olinadi)", 4060), cell("Avtomatik", 2300)] }),
+    ]
+  }),
+  spacer(),
+  body("Eslatma: Provodkalar jurnali Bosh kitob (core_gl) uchun birlamchi yozuv manbai bo'lib xizmat qiladi — har bir O'tkazilgan provodka core_gl ga buxgalteriya yozuvi sifatida yetkaziladi (8-bo'limga qarang). Jurnaldagi hech bir yozuv o'chirilmaydi yoki tahrirlanmaydi.", { italic: true }),
+
+  heading("3.5. Provodka hayot sikli (holatlari)", HeadingLevel.HEADING_2),
+  body("Har bir provodka o'z umri davomida quyidagi holatlardan o'tadi. Faqat \"O'tkazilgan\" holatdagi provodka hisob qoldig'i va aylanmasiga ta'sir qiladi; qolgan holatlar qoldiqqa ta'sir qilmaydi."),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: [2400, 6960],
+    rows: [
+      new TableRow({ children: [hCell("Holat", 2400), hCell("Mazmuni", 6960)] }),
+      new TableRow({ children: [cell("Kiritilgan (Введён)", 2400), cell("Provodka kiritildi, ammo hisob qoldig'i va aylanmasiga TA'SIR QILMAYDI (qoralama yozuv). Bu holatdan provodka tekshirishga yoki o'tkazishga yo'naltiriladi yoki o'chiriladi.", 6960)] }),
+      new TableRow({ children: [cell("Tekshirilgan (Проверен)", 2400, { shaded: true }), cell("Provodka tekshiruvdan o'tdi (Maker-Checker bo'yicha; ixtiyoriy oraliq holat). Qoldiqqa hali ta'sir qilmaydi. Bu holatdan provodka o'tkaziladi yoki o'chiriladi.", 6960, { shaded: true })] }),
+      new TableRow({ children: [cell("O'tkazilgan / Bajarilgan (Проведён)", 2400), cell("Provodka kitobga rasman o'tkazildi — hisob qoldig'i va aylanmasiga TA'SIR QILADI, pul haqiqatan harakatlanadi. Ijobiy-yakuniy holat: o'chirib bo'lmaydi, faqat storno orqali qaytariladi.", 6960)] }),
+      new TableRow({ children: [cell("O'chirilgan (Удалён)", 2400, { shaded: true }), cell("Provodka faqat Kiritilgan yoki Tekshirilgan holatdan o'chiriladi (qoldiqqa ta'sir qilmasdan). O'tkazilgan provodkani o'chirib BO'LMAYDI. Yakuniy holat (izlanuvchanlik uchun fizik o'chirilmaydi).", 6960, { shaded: true })] }),
+      new TableRow({ children: [cell("Storno (Сторнирован)", 2400), cell("O'tkazilgan provodka teskari (qarshi) yozuv orqali bekor qilindi; qoldiqlar dastlabki holatga qaytdi. Asl provodka o'zgarmaydi — qarshi yozuv bilan bog'lanadi. Yakuniy holat.", 6960)] }),
+    ]
+  }),
+  spacer(),
+  body("Provodka holat o'tish qoidalari:", { bold: true }),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: [2800, 2800, 3760],
+    rows: [
+      new TableRow({ children: [hCell("Joriy holat", 2800), hCell("Mumkin keyingi holat", 2800), hCell("Shart", 3760)] }),
+      new TableRow({ children: [cell("Kiritilgan", 2800), cell("Tekshirilgan", 2800), cell("Tekshiruvga yuborilganda (Maker-Checker; ixtiyoriy)", 3760)] }),
+      new TableRow({ children: [cell("Kiritilgan", 2800, { shaded: true }), cell("O'tkazilgan", 2800, { shaded: true }), cell("O'tkazma bajarilganda (qoldiqqa ta'sir qiladi)", 3760, { shaded: true })] }),
+      new TableRow({ children: [cell("Kiritilgan", 2800), cell("O'chirilgan", 2800), cell("O'tkazma rad/bekor qilinganda (qoldiqqa ta'sir yo'q)", 3760)] }),
+      new TableRow({ children: [cell("Tekshirilgan", 2800, { shaded: true }), cell("O'tkazilgan", 2800, { shaded: true }), cell("Tasdiqlanib o'tkazilganda (qoldiqqa ta'sir qiladi)", 3760, { shaded: true })] }),
+      new TableRow({ children: [cell("Tekshirilgan", 2800), cell("O'chirilgan", 2800), cell("Tekshiruvdan keyin bekor qilinganda (qoldiqqa ta'sir yo'q)", 3760)] }),
+      new TableRow({ children: [cell("O'tkazilgan", 2800, { shaded: true }), cell("Storno", 2800, { shaded: true }), cell("Faqat qarshi yozuv orqali (o'chirib bo'lmaydi); sabab majburiy", 3760, { shaded: true })] }),
+    ]
+  }),
+  spacer(),
+  body("Muhim: O'tkazilgan provodkani o'chirib bo'lmaydi — uni faqat storno (qarshi yozuv) orqali qaytarish mumkin. O'chirilgan va Storno holatlari yakuniy hisoblanadi.", { italic: true }),
+
+  heading("3.6. Hujjat va provodka qatlamlarining bog'lanishi", HeadingLevel.HEADING_2),
+  body("Pul o'tkazmasi ikki qatlamda yashaydi: hujjat darajasi (o'tkazma hujjatining holati — operator/supervisor ish jarayoni) va buxgalteriya darajasi (o'tkazma hosil qiladigan provodkalarning holati). O'tkazma HUJJATI provodkalarni HOSIL QILADI: hujjat holati o'zgarganda unga bog'liq provodkalar holati ham izchil ravishda o'zgaradi. Quyidagi jadval ikki qatlam o'rtasidagi muvofiqlikni ko'rsatadi."),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: [3000, 3000, 3360],
+    rows: [
+      new TableRow({ children: [hCell("O'tkazma (hujjat) holati", 3000), hCell("Provodkalar holati", 3000), hCell("Qoldiqqa ta'siri", 3360)] }),
+      new TableRow({ children: [cell("Tasdiq kutilmoqda", 3000), cell("Kiritilgan (Введён)", 3000), cell("Yo'q — qoralama, pul harakatlanmaydi", 3360)] }),
+      new TableRow({ children: [cell("Bajarilgan", 3000, { shaded: true }), cell("O'tkazilgan (Проведён)", 3000, { shaded: true }), cell("Bor — qoldiq haqiqatan harakatlanadi", 3360, { shaded: true })] }),
+      new TableRow({ children: [cell("Rad etilgan", 3000), cell("O'chirilgan (Удалён)", 3000), cell("Yo'q — yozuv o'chiriladi, qoldiq o'zgarmaydi", 3360)] }),
+      new TableRow({ children: [cell("Bekor qilingan", 3000, { shaded: true }), cell("O'chirilgan (Удалён)", 3000, { shaded: true }), cell("Yo'q — yozuv o'chiriladi, qoldiq o'zgarmaydi", 3360, { shaded: true })] }),
+      new TableRow({ children: [cell("Storno", 3000), cell("Storno (Сторнирован) + qarshi yozuv", 3000), cell("Bor — qarshi yozuv qoldiqni tiklaydi", 3360)] }),
+    ]
+  }),
+  spacer(),
+  body("Xulosa: ikki qatlam doimo izchil bo'lishi shart — hujjat \"Bajarilgan\" bo'lmaguncha provodkalar \"O'tkazilgan\" bo'lmaydi va qoldiq harakatlanmaydi; hujjat \"Storno\" qilinganda provodkalar ham qarshi yozuv bilan teskari yo'naltiriladi. Bu izchillik buzilishi mumkin emas.", { italic: true }),
   spacer(200),
 ];
 
@@ -585,6 +691,21 @@ const section4 = [
       brRow("BR-026", "Ichki o'tkazma (bank ichidagi hisoblar orasida) F0 yadro doirasida to'liq qo'llab-quvvatlanadi: mijozdan mijozga hamda mijozning o'z hisoblari orasida.", "Yuqori", "Ikkala", false),
       brRow("BR-027", "Banklararo o'tkazma (Markaziy bank kliring orqali, MFO bo'yicha) keyingi fazaga rejalashtirilgan. Bunda oluvchi banki (MFO) va to'lov maqsadi kodi majburiy bo'ladi, Markaziy bank to'lov tizimi bilan integratsiya talab qilinadi.", "O'rta", "Ikkala", true),
       brRow("BR-028", "Byudjet to'lovlari (soliq/yig'imlar, yagona g'aznachilik hisobiga) keyingi fazaga rejalashtirilgan. Bunda INN/PINFL va byudjet daromad kodi majburiy bo'ladi.", "O'rta", "Ikkala", false),
+    ]
+  }),
+
+  heading("4.9. Provodka va provodkalar jurnali qoidalari", HeadingLevel.HEADING_2),
+  new Table({
+    width: { size: CONTENT_WIDTH, type: WidthType.DXA },
+    columnWidths: QCOLS,
+    rows: [
+      brHeader(),
+      brRow("BR-029", "Faqat \"O'tkazilgan\" (Проведён) holatdagi provodka hisob qoldig'i va aylanmasiga ta'sir qiladi. \"Kiritilgan\" holatdagi provodka (qoralama) qoldiqqa ta'sir qilmaydi.", "Yuqori", "Tizim", false),
+      brRow("BR-030", "Har bir provodkalar to'plamida (bir o'tkazma doirasida) jami debet summasi jami kredit summasiga teng bo'lishi shart — buxgalteriya balansi buzilmasligi kerak.", "Yuqori", "Tizim", true),
+      brRow("BR-031", "\"O'tkazilgan\" provodkani o'chirib bo'lmaydi. Uni tuzatishning yagona yo'li — storno (qarshi yozuv) yaratish. Provodka faqat \"Kiritilgan\" yoki \"Tekshirilgan\" holatdan o'chirilishi mumkin.", "Yuqori", "Tizim", false),
+      brRow("BR-032", "Provodkalar jurnali o'zgartirilmaydi: mavjud yozuvni tahrirlash yoki fizik o'chirish taqiqlanadi. Jurnalga faqat yangi yozuv qo'shiladi (audit izi). To'g'rilash faqat storno yoki tuzatuvchi yozuv orqali amalga oshadi.", "Yuqori", "Tizim", true),
+      brRow("BR-033", "Provodka holati o'tkazma (hujjat) holatiga izchil bog'liq bo'lishi shart: Tasdiq kutilmoqda → Kiritilgan; Bajarilgan → O'tkazilgan; Rad etilgan/Bekor qilingan → O'chirilgan; Storno → Storno (qarshi yozuv). Ikki qatlam o'rtasidagi nomuvofiqlik bo'lishi mumkin emas.", "Yuqori", "Tizim", false),
+      brRow("BR-034", "Har bir provodka bog'liq o'tkazma hujjati (referens) raqamiga ega bo'lishi shart — jurnaldan asl o'tkazmaga, o'tkazmadan jurnal yozuvlariga izlanish mumkin bo'lishi kerak.", "O'rta", "Tizim", true),
     ]
   }),
   spacer(200),
@@ -721,14 +842,19 @@ const section7 = [
         cell("Tanlangan davrda storno qilingan bajarilgan o'tkazmalar, storno sababi va mas'ul xodim", 3560), cell("Oylik / Talab bo'yicha", 2400)
       ]}),
       new TableRow({ children: [
-        cell("RPT-006", 1000, { shaded: true }), cell("Banklararo reestr (keyingi faza)", 2400, { shaded: true }),
-        cell("Markaziy bank kliring orqali yuborilgan/qabul qilingan banklararo o'tkazmalar, MFO bo'yicha guruhlangan", 3560, { shaded: true }),
-        cell("Kunlik", 2400, { shaded: true })
+        cell("RPT-006", 1000, { shaded: true }), cell("Provodkalar jurnali hisoboti", 2400, { shaded: true }),
+        cell("Tanlangan davr, hisob va holat (Kiritilgan/Tekshirilgan/O'tkazilgan/O'chirilgan/Storno) bo'yicha provodkalar; har bir yozuv uchun debet, kredit va oraliq qoldiq, jami debet/kredit aylanma ko'rsatiladi", 3560, { shaded: true }),
+        cell("Kunlik / Talab bo'yicha", 2400, { shaded: true })
+      ]}),
+      new TableRow({ children: [
+        cell("RPT-007", 1000), cell("Banklararo reestr (keyingi faza)", 2400),
+        cell("Markaziy bank kliring orqali yuborilgan/qabul qilingan banklararo o'tkazmalar, MFO bo'yicha guruhlangan", 3560), cell("Kunlik", 2400)
       ]}),
     ]
   }),
   spacer(),
   body("Eslatma: Hisob ko'chirmasi (RPT-002) da chiqim, kirim va qoldiq ustunlari muvozanatda bo'lishi shart — yakuniy qoldiq = boshlang'ich qoldiq + jami kirim − jami chiqim.", { italic: true }),
+  body("Eslatma: Provodkalar jurnali hisobotida (RPT-006) faqat \"O'tkazilgan\" provodkalar qoldiqqa ta'sir qiladi; jami debet aylanma jami kredit aylanmaga teng bo'lishi (balans) tekshiriladi.", { italic: true }),
   spacer(200),
 ];
 
@@ -751,8 +877,8 @@ const section8 = [
       ]}),
       new TableRow({ children: [
         cell("core_gl", 1700, { shaded: true }), cell("TRX → GL", 1700, { shaded: true }),
-        cell("Har bir bajarilgan o'tkazma uchun buxgalteriya yozuvi (chiqim va kirim, balans hisoblari kodi bo'yicha)", 3280, { shaded: true }),
-        cell("Har o'tkazma tasdiqlanganda", 2680, { shaded: true })
+        cell("Provodkalar jurnalidagi har bir \"O'tkazilgan\" provodka core_gl (Bosh kitob) ga buxgalteriya yozuvi sifatida yetkaziladi (chiqim/kirim, balans hisoblari kodi bo'yicha). Jurnal — Bosh kitob uchun birlamchi yozuv manbai.", 3280, { shaded: true }),
+        cell("Har o'tkazma tasdiqlanganda (provodka O'tkazilgan holatga o'tganda)", 2680, { shaded: true })
       ]}),
       new TableRow({ children: [
         cell("core_curr", 1700), cell("CURR → TRX", 1700),
@@ -784,7 +910,8 @@ const section8 = [
     ]
   }),
   spacer(),
-  body("Eng muhim shart: har bir tasdiqlangan o'tkazmada core_acc dagi qoldiq yangilanishi va core_gl dagi buxgalteriya yozuvi bir butun amal sifatida bajarilishi shart — yo to'liq bajariladi, yo umuman bajarilmaydi.", { italic: true }),
+  body("Eng muhim shart: har bir tasdiqlangan o'tkazmada provodkalar jurnaliga \"O'tkazilgan\" provodkalarning yozilishi, core_acc dagi qoldiq yangilanishi va core_gl dagi buxgalteriya yozuvi bir butun amal sifatida bajarilishi shart — yo to'liq bajariladi, yo umuman bajarilmaydi.", { italic: true }),
+  body("Provodkalar jurnali — core_ac va core_gl o'rtasidagi asosiy bog'lovchi halqa: o'tkazma bajarilganda jurnalga \"O'tkazilgan\" provodka yoziladi, ushbu provodka esa Bosh kitob (core_gl) ga birlamchi buxgalteriya yozuvi sifatida o'tadi. Jurnal o'zgartirilmaydi, shu sababli core_gl bilan to'liq izchillik va izlanuvchanlik ta'minlanadi.", { italic: true }),
   spacer(200),
 ];
 
