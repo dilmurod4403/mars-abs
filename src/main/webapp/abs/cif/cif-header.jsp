@@ -54,6 +54,18 @@
                 </a>
             </div>
 
+            <div class="nav-section">
+                <div class="nav-section-title">ACC — Hisoblar</div>
+                <a class="nav-item ${param.page == 'accounts' ? 'active' : ''}" href="${__cp}/abs/acc/account-list.jsp">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    Hisoblar
+                </a>
+                <a class="nav-item ${param.page == 'account-create' ? 'active' : ''}" href="${__cp}/abs/acc/account-create.jsp">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/></svg>
+                    Yangi hisob
+                </a>
+            </div>
+
             <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
             <div class="nav-section">
                 <div class="nav-section-title">Tizim</div>
@@ -85,7 +97,9 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
             <div class="breadcrumb">
-                <span>CIF</span>
+                <% boolean __isAcc = "accounts".equals(request.getParameter("page"))
+                                  || "account-create".equals(request.getParameter("page")); %>
+                <span><%= __isAcc ? "ACC" : "CIF" %></span>
                 <span class="sep">›</span>
                 <span class="crumb-current">${param.title}</span>
             </div>
