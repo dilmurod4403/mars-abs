@@ -34,6 +34,10 @@
 <%
     boolean modal = "1".equals(request.getParameter("modal"));
 
+    /* Holat boshqaruvi natijasi — account-status-save.jsp dan redirect */
+    String pageMsg = request.getParameter("msg");
+    String pageErr = request.getParameter("err");
+
     long accountId = -1L;
     String idParam = request.getParameter("id");
     if (idParam != null && !idParam.isEmpty()) {
@@ -126,6 +130,31 @@
     <jsp:param name="title" value="Hisob detali"/>
     <jsp:param name="page" value="accounts"/>
 </jsp:include>
+<% } %>
+
+<%-- Holat boshqaruvi natijalari (redirect parametrlardan) --%>
+<% if (pageMsg != null && !pageMsg.isEmpty()) { %>
+<div class="alert alert-success" style="margin-bottom:1rem;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:-2px; margin-right:6px; flex-shrink:0;">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <%= e(pageMsg) %>
+</div>
+<% } %>
+<% if (pageErr != null && !pageErr.isEmpty()) { %>
+<div class="alert alert-danger" style="margin-bottom:1rem;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         style="vertical-align:-2px; margin-right:6px; flex-shrink:0;">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <%= e(pageErr) %>
+</div>
 <% } %>
 
 <%-- DB xatosi --%>
@@ -301,6 +330,201 @@
     </dl>
 </div>
 <% } %>
+
+<%-- BO'LIM 5: Holat boshqaruvi --%>
+<div class="card" style="margin-top:1rem;">
+    <div class="section-title">Holat boshqaruvi</div>
+
+    <%-- CLOSED — terminal holat --%>
+    <% if ("CLOSED".equals(state)) { %>
+    <div style="display:flex; align-items:center; gap:0.625rem; padding:0.875rem 0;
+                color:var(--gray-500); font-size:0.9rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+        </svg>
+        Hisob yopilgan (terminal holat). Keyingi o'zgarish mumkin emas.
+    </div>
+
+    <%-- CREATED — tasdiqlash kutilmoqda --%>
+    <% } else if ("CREATED".equals(state)) { %>
+    <div style="display:flex; align-items:center; gap:0.625rem; padding:0.875rem 0;
+                color:var(--gray-500); font-size:0.9rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Avval tasdiqlash kerak. Hisob ro'yxatdan Maker-Checker orqali tasdiqlansin.
+    </div>
+
+    <%-- APPROVED — faol hisob --%>
+    <% } else if ("APPROVED".equals(state)) { %>
+    <div style="display:flex; flex-wrap:wrap; gap:0.625rem; padding:0.5rem 0;">
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="BLOCKED"/>
+            <button type="submit" class="btn btn-danger btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Bloklash
+            </button>
+        </form>
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="TEMP_CLOSED"/>
+            <button type="submit" class="btn btn-secondary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                Vaqtincha yopish
+            </button>
+        </form>
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="CLOSED"/>
+            <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Hisobni yopishni tasdiqlaysizmi? Qoldiq 0 bo’‘lishi shart.')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                </svg>
+                Yopish
+            </button>
+        </form>
+
+    </div>
+
+    <%-- BLOCKED — bloklangan hisob --%>
+    <% } else if ("BLOCKED".equals(state)) { %>
+    <div style="display:flex; flex-wrap:wrap; gap:0.625rem; padding:0.5rem 0;">
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="APPROVED"/>
+            <button type="submit" class="btn btn-primary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                </svg>
+                Blokdan chiqarish
+            </button>
+        </form>
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="CLOSED"/>
+            <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Hisobni yopishni tasdiqlaysizmi? Qoldiq 0 bo’‘lishi shart.')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                </svg>
+                Yopish
+            </button>
+        </form>
+
+    </div>
+
+    <%-- TEMP_CLOSED — vaqtincha yopilgan --%>
+    <% } else if ("TEMP_CLOSED".equals(state)) { %>
+    <div style="display:flex; flex-wrap:wrap; gap:0.625rem; padding:0.5rem 0;">
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="APPROVED"/>
+            <button type="submit" class="btn btn-primary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+                Faollashtirish
+            </button>
+        </form>
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="BLOCKED"/>
+            <button type="submit" class="btn btn-danger btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Bloklash
+            </button>
+        </form>
+
+        <form method="post"
+              action="<%= request.getContextPath() %>/abs/acc/account-status-save.jsp"
+              style="display:inline;">
+            <input type="hidden" name="account_id" value="<%= accountId %>"/>
+            <input type="hidden" name="new_state"  value="CLOSED"/>
+            <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirm('Hisobni yopishni tasdiqlaysizmi? Qoldiq 0 bo’‘lishi shart.')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     style="vertical-align:-1px; margin-right:4px;">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                </svg>
+                Yopish
+            </button>
+        </form>
+
+    </div>
+
+    <%-- Boshqa noma'lum holat (mudofaa) --%>
+    <% } else { %>
+    <div style="color:var(--gray-500); padding:0.875rem 0; font-size:0.9rem;">
+        Joriy holat (<strong><%= e(state) %></strong>) uchun boshqaruv mavjud emas.
+    </div>
+    <% } %>
+
+</div>
 
 <% } /* end found */ %>
 

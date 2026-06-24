@@ -1300,6 +1300,20 @@ CREATE OR REPLACE PACKAGE core_acc_service AS
         o_ora_message  OUT VARCHAR2
     );
 
+    -- ---------------------------------------------------------------------------
+    -- Change_Account_State — holat o'zgartirish (operatsion).
+    --   Matritsa: APPROVED->{TEMP_CLOSED,BLOCKED,CLOSED}; TEMP_CLOSED->{APPROVED,BLOCKED,CLOSED};
+    --   BLOCKED->{APPROVED,CLOSED}; CLOSED=terminal. CLOSED uchun saldo_out=0 shart.
+    -- ---------------------------------------------------------------------------
+    PROCEDURE Change_Account_State(
+        i_account_id  IN  NUMBER,
+        i_new_state   IN  VARCHAR2,
+        i_user        IN  NUMBER,
+        o_code        OUT NUMBER,
+        o_message     OUT VARCHAR2,
+        o_ora_message OUT VARCHAR2
+    );
+
 END core_acc_service;
 /
 
@@ -1439,6 +1453,57 @@ CREATE OR REPLACE PACKAGE BODY core_acc_service AS
                                  'Hisobni tasdiqlashda xato');
             o_ora_message := SUBSTR(SQLERRM, 1, 4000);
     END Approve_Account;
+
+    -- ---------------------------------------------------------------------------
+    -- Change_Account_State — holat matritsasi + CLOSED(saldo=0) -> repo.Set_State
+    -- ---------------------------------------------------------------------------
+    PROCEDURE Change_Account_State(
+        i_account_id  IN  NUMBER,
+        i_new_state   IN  VARCHAR2,
+        i_user        IN  NUMBER,
+        o_code        OUT NUMBER,
+        o_message     OUT VARCHAR2,
+        o_ora_message OUT VARCHAR2
+    ) IS
+        v_state core_acc_accounts.state%TYPE;
+        v_saldo core_acc_accounts.saldo_out%TYPE;
+        v_ok    BOOLEAN := FALSE;
+    BEGIN
+        o_code := core_acc_const.c_code_ok; o_message := NULL; o_ora_message := NULL;
+        SELECT state, saldo_out INTO v_state, v_saldo
+          FROM core_acc_accounts WHERE account_id = i_account_id;
+
+        IF    v_state = core_acc_const.c_st_approved
+              AND i_new_state IN (core_acc_const.c_st_temp_closed, core_acc_const.c_st_blocked, core_acc_const.c_st_closed) THEN v_ok := TRUE;
+        ELSIF v_state = core_acc_const.c_st_temp_closed
+              AND i_new_state IN (core_acc_const.c_st_approved, core_acc_const.c_st_blocked, core_acc_const.c_st_closed) THEN v_ok := TRUE;
+        ELSIF v_state = core_acc_const.c_st_blocked
+              AND i_new_state IN (core_acc_const.c_st_approved, core_acc_const.c_st_closed) THEN v_ok := TRUE;
+        END IF;
+        IF NOT v_ok THEN
+            RAISE_APPLICATION_ERROR(core_acc_const.c_err_invalid_state,
+                'Holat o''tishi ruxsat etilmagan: ' || v_state || ' -> ' || i_new_state);
+        END IF;
+
+        IF i_new_state = core_acc_const.c_st_closed AND NVL(v_saldo, 0) <> 0 THEN
+            RAISE_APPLICATION_ERROR(core_acc_const.c_err_invalid_state,
+                'Hisobni yopib bo''lmaydi: qoldiq 0 emas (' || v_saldo || ')');
+        END IF;
+
+        core_acc_repo.Set_State(i_account_id, i_new_state, i_user);
+        core_acc_logger.Log(i_account_id, 'STATE_CHANGE', v_state || '->' || i_new_state, i_user);
+        COMMIT;
+        o_message := 'Holat o''zgartirildi: ' || i_new_state;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            ROLLBACK; o_code := 100; o_message := 'Hisob topilmadi: ' || i_account_id;
+            o_ora_message := SQLERRM;
+        WHEN OTHERS THEN
+            ROLLBACK; o_code := SQLCODE;
+            o_message := NVL(REGEXP_SUBSTR(SQLERRM, '[^:]+:\s*(.*)', 1, 1, NULL, 1),
+                             'Holat o''zgartirishda xato');
+            o_ora_message := SUBSTR(SQLERRM, 1, 4000);
+    END Change_Account_State;
 
 END core_acc_service;
 /
