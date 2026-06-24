@@ -355,13 +355,13 @@
 <div class="page-header">
     <div>
         <h1>Boshqaruv paneli</h1>
-        <div class="subtitle">CIF — Mijozlar axborot tizimi</div>
+        <div class="subtitle">CIF — Klientlar axborot tizimi</div>
     </div>
-    <a href="${pageContext.request.contextPath}/abs/cif/customer-create.jsp" class="btn btn-primary">
+    <a href="${pageContext.request.contextPath}/abs/cif/client-create.jsp" class="btn btn-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 5v14M5 12h14"/>
         </svg>
-        Yangi mijoz
+        Yangi klient
     </a>
 </div>
 
@@ -378,9 +378,9 @@
             </svg>
         </div>
         <div class="dash-metric-body">
-            <div class="dash-metric-label">Jami mijozlar</div>
+            <div class="dash-metric-label">Jami klientlar</div>
             <div class="dash-metric-value"><%= totalCustomers %></div>
-            <div class="dash-metric-sub">barcha holatlardagi</div>
+            <div class="dash-metric-sub">barcha holatlardagi klientlar</div>
         </div>
     </div>
 
@@ -394,7 +394,7 @@
         <div class="dash-metric-body">
             <div class="dash-metric-label">Jismoniy shaxs</div>
             <div class="dash-metric-value"><%= individualCount %></div>
-            <div class="dash-metric-sub">FYaSh mijozlari</div>
+            <div class="dash-metric-sub">FYaSh klientlari</div>
         </div>
     </div>
 
@@ -408,7 +408,7 @@
         <div class="dash-metric-body">
             <div class="dash-metric-label">Yuridik shaxs</div>
             <div class="dash-metric-value"><%= corporateCount %></div>
-            <div class="dash-metric-sub">YuSh mijozlari</div>
+            <div class="dash-metric-sub">YuSh klientlari</div>
         </div>
     </div>
 
@@ -586,7 +586,7 @@
     <div class="card-title">Tezkor havolalar</div>
     <div class="quick-links">
 
-        <a href="${pageContext.request.contextPath}/abs/cif/customer-list.jsp" class="quick-link-card">
+        <a href="${pageContext.request.contextPath}/abs/cif/client-list.jsp" class="quick-link-card">
             <div class="quick-link-icon indigo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
@@ -596,7 +596,7 @@
                 </svg>
             </div>
             <div class="quick-link-body">
-                <div class="quick-link-title">Mijozlar ro'yxati</div>
+                <div class="quick-link-title">Klientlar ro'yxati</div>
                 <div class="quick-link-badge" style="background:var(--primary-100);color:var(--primary)"><%= totalCustomers %> ta</div>
             </div>
             <div class="quick-link-arrow">
@@ -606,7 +606,7 @@
             </div>
         </a>
 
-        <a href="${pageContext.request.contextPath}/abs/cif/customer-approve.jsp" class="quick-link-card">
+        <a href="${pageContext.request.contextPath}/abs/cif/client-list.jsp" class="quick-link-card">
             <div class="quick-link-icon amber">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"/>
@@ -627,43 +627,18 @@
             </div>
         </a>
 
-        <a href="${pageContext.request.contextPath}/abs/cif/expired-docs.jsp" class="quick-link-card">
-            <div class="quick-link-icon red">
+        <a href="${pageContext.request.contextPath}/abs/cif/client-create.jsp" class="quick-link-card">
+            <div class="quick-link-icon indigo" style="background:#ecfdf5;color:#047857;">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/>
+                    <line x1="22" y1="11" x2="16" y2="11"/>
                 </svg>
             </div>
             <div class="quick-link-body">
-                <div class="quick-link-title">Muddati o'tgan</div>
-                <% if (expiredDocuments > 0) { %>
-                <div class="quick-link-badge red"><%= expiredDocuments %> hujjat</div>
-                <% } else { %>
-                <div class="quick-link-badge" style="background:var(--gray-100);color:var(--gray-500)">Muammo yo'q</div>
-                <% } %>
-            </div>
-            <div class="quick-link-arrow">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6"/>
-                </svg>
-            </div>
-        </a>
-
-        <a href="${pageContext.request.contextPath}/abs/cif/pep-report.jsp" class="quick-link-card">
-            <div class="quick-link-icon pink">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-            </div>
-            <div class="quick-link-body">
-                <div class="quick-link-title">PEP hisobot</div>
-                <% if (pepCount > 0) { %>
-                <div class="quick-link-badge pink"><%= pepCount %> ta shaxs</div>
-                <% } else { %>
-                <div class="quick-link-badge" style="background:var(--gray-100);color:var(--gray-500)">Ro'yxat bo'sh</div>
-                <% } %>
+                <div class="quick-link-title">Yangi klient</div>
+                <div class="quick-link-badge" style="background:#ecfdf5;color:#047857;">Qo'shish</div>
             </div>
             <div class="quick-link-arrow">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
