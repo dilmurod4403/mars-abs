@@ -41,35 +41,16 @@
                 </a>
             </div>
 
-            <div class="nav-section">
-                <div class="nav-section-title">Boshqa modullar</div>
-                <a class="nav-item" href="${__cp}/abs/acc/dashboard.jsp">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                    ACC — Hisoblar
-                </a>
-            </div>
 
             <div class="nav-section">
-                <div class="nav-section-title">CIF — Mijozlar</div>
+                <div class="nav-section-title">CIF — Klientlar</div>
                 <a class="nav-item ${param.page == 'clients' ? 'active' : ''}" href="${__cp}/abs/cif/client-list.jsp">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
-                    Klientlar (SIRIUS)
+                    Klientlar
                 </a>
-                <a class="nav-item ${param.page == 'customers' ? 'active' : ''}" href="${__cp}/abs/cif/customer-list.jsp">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
-                    Mijozlar (demo)
-                </a>
-                <a class="nav-item ${param.page == 'approve' ? 'active' : ''}" href="${__cp}/abs/cif/customer-approve.jsp">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                    Tasdiqlash
-                </a>
-                <a class="nav-item ${param.page == 'expired' ? 'active' : ''}" href="${__cp}/abs/cif/expired-docs.jsp">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                    Muddati o'tgan
-                </a>
-                <a class="nav-item ${param.page == 'pep' ? 'active' : ''}" href="${__cp}/abs/cif/pep-report.jsp">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                    PEP hisobot
+                <a class="nav-item ${param.page == 'client-create' ? 'active' : ''}" href="${__cp}/abs/cif/client-create.jsp">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6"/><path d="M20 8v6"/><path d="M23 11h-6"/></svg>
+                    Yangi klient
                 </a>
             </div>
 

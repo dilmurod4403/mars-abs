@@ -92,6 +92,26 @@ CREATE OR REPLACE VIEW core_acc_pending_accounts_v AS
 SELECT * FROM core_acc_accounts_ui_v
 WHERE state = 'CREATED';
 
+-- ----------------------------------------------------------------------------
+-- 5. core_cif_statistics_i_v — dashboard statistikasi (1 qator, real schema)
+--    Eski demo dashboard.jsp shu view'ni so'raydi — real core_cif_clients ustida.
+-- ----------------------------------------------------------------------------
+CREATE OR REPLACE VIEW core_cif_statistics_i_v AS
+SELECT
+    (SELECT COUNT(*) FROM core_cif_clients)                                      AS total_customers,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_kind = 'P')             AS individual_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_kind IN ('J','I'))      AS corporate_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_status = 'CREATED')     AS pending_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_status = 'APPROVED')    AS active_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_status = 'BLOCKED')     AS blocked_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE client_status IN ('CLOSED','ARCHIVED','DELETED')) AS closed_count,
+    (SELECT COUNT(*) FROM core_cif_clients WHERE aml_risk_level = 'HIGH')       AS high_risk_count,
+    0                                                                           AS pep_count,
+    (SELECT COUNT(*) FROM core_cif_documents)                                   AS total_documents,
+    0                                                                           AS expired_documents,
+    (SELECT COUNT(*) FROM core_cif_contacts)                                    AS total_contacts
+FROM dual;
+
 -- ============================================================================
 -- 50_views.sql — tugadi.
 -- ============================================================================
