@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@WebServlet("/transfer")
+// @WebServlet("/transfer")  // LEGACY demo — O'CHIRILDI
 public class TransferServlet extends HttpServlet {
 
     private final AccountDao accountDao = new AccountDao();

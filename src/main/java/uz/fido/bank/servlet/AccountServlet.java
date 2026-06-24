@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@WebServlet("/accounts/*")
+// @WebServlet("/accounts/*")  // LEGACY demo — O'CHIRILDI (real acc UI keyin)
 public class AccountServlet extends HttpServlet {
 
     private final AccountDao accountDao = new AccountDao();

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 
-@WebServlet("/customers/*")
+// @WebServlet("/customers/*")  // LEGACY demo — O'CHIRILDI (real: /abs/cif/client-list.jsp)
 public class CustomerServlet extends HttpServlet {
 
     private final CustomerDao customerDao = new CustomerDao();

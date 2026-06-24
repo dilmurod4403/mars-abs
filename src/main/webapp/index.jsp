@@ -1,2 +1,2 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<% response.sendRedirect(request.getContextPath() + "/"); %>
+<% response.sendRedirect(request.getContextPath() + "/abs/login.jsp"); %>

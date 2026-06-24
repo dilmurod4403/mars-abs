@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("")
+// @WebServlet("")  // LEGACY demo — O'CHIRILDI (real: /abs/cif/dashboard.jsp). Root -> index.jsp -> login.
 public class DashboardServlet extends HttpServlet {
 
     private final CustomerDao customerDao = new CustomerDao();
