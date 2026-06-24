@@ -35,8 +35,8 @@
     try {
         Object sessionUser = session.getAttribute("currentUser");
         if (sessionUser != null) {
-            java.lang.reflect.Method m = sessionUser.getClass().getMethod("getId");
-            makerUser = ((Number) m.invoke(sessionUser)).longValue();
+            Object uid = ((java.util.Map) sessionUser).get("user_id");
+            if (uid != null) makerUser = ((Number) uid).longValue();
         }
     } catch (Exception ignored) { /* default 101 */ }
 

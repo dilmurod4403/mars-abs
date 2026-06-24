@@ -6,19 +6,19 @@
   Procedure: core_acc_service.Open_Account
   Imzo: Open_Account(io_rec t_account_rec, o_account_id, o_account_number, o_code, o_message, o_ora_message)
 --%>
-<%!
-    /** APPROVED klientlar ro'yxatini olish */
-    private static List<long[]> getApprovedClients(javax.servlet.http.HttpServletRequest req) throws Exception {
-        // long[0]=client_id, va map list'i yo'q — oddiy wrapper classiga o'tamiz
-        return null; // haqiqiy logika quyida
-    }
-%>
 <%
     // =====================================================================
     // APPROVED klientlar ro'yxati (SELECT element uchun)
     // =====================================================================
     List<Object[]> clients = new ArrayList<>();  // [client_id, client_code, full_name]
     String clientLoadError = null;
+
+    // =====================================================================
+    // Filiallar ro'yxati (datalist uchun)
+    // =====================================================================
+    List<Object[]> branches = new ArrayList<>();  // [code, name]
+    String branchLoadError = null;
+
     try (Connection conn = AbsDb.getConnection()) {
         String sql = "SELECT client_id, client_code, full_name " +
                      "FROM core_cif_clients_ui_v " +
@@ -38,6 +38,21 @@
         clientLoadError = ex.getMessage();
     }
 
+    try (Connection conn = AbsDb.getConnection()) {
+        String sql = "SELECT code, name FROM core_ref_branch WHERE condition='A' ORDER BY code";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                branches.add(new Object[]{
+                    rs.getString("code"),
+                    rs.getString("name")
+                });
+            }
+        }
+    } catch (Exception ex) {
+        branchLoadError = ex.getMessage();
+    }
+
     // =====================================================================
     // POST: Open_Account chaqiruv
     // =====================================================================
@@ -47,7 +62,8 @@
         String name         = request.getParameter("name");
         String accType      = request.getParameter("acc_type");
         String branchCode   = request.getParameter("branch_code");
-        if (branchCode == null || branchCode.isEmpty()) branchCode = "00014";
+        if (branchCode == null || branchCode.trim().isEmpty()) branchCode = "00014";
+        branchCode = branchCode.trim();
         if (accType   == null || accType.isEmpty())   accType   = "VKLAD";
 
         // maker_user — session dan, yo'q bo'lsa 101
@@ -55,8 +71,8 @@
         try {
             Object sessionUser = session.getAttribute("currentUser");
             if (sessionUser != null) {
-                java.lang.reflect.Method m = sessionUser.getClass().getMethod("getId");
-                makerUser = ((Number) m.invoke(sessionUser)).longValue();
+                Object uid = ((java.util.Map) sessionUser).get("user_id");
+                if (uid != null) makerUser = ((Number) uid).longValue();
             }
         } catch (Exception ignored) {}
 
@@ -66,6 +82,8 @@
             request.setAttribute("errorMsg", "Valyuta tanlanmadi");
         } else if (name == null || name.trim().isEmpty()) {
             request.setAttribute("errorMsg", "Hisob nomi kiritilmadi");
+        } else if (branchCode.isEmpty()) {
+            request.setAttribute("errorMsg", "Filial kodi kiritilmadi");
         } else {
             try {
                 long clientId = Long.parseLong(clientIdStr.trim());
@@ -211,11 +229,21 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="branch_code">Filial kodi</label>
+                <label for="branch_code">Filial kodi *</label>
                 <input type="text" id="branch_code" name="branch_code" class="form-control"
-                       maxlength="10" placeholder="00014"
+                       list="branchList" required autocomplete="off"
+                       maxlength="10" placeholder="Kod yoki nom bo'yicha qidiring..."
                        value="<c:out value='${not empty sv_branch ? sv_branch : \"00014\"}'/>">
-                <small class="form-hint">Standart: 00014</small>
+                <datalist id="branchList">
+                    <%
+                        for (Object[] br : branches) {
+                            String bCode = (String) br[0];
+                            String bName = (String) br[1];
+                    %>
+                    <option value="<%= bCode != null ? bCode : "" %>"><%= bCode != null ? bCode : "" %><%= bName != null ? " — " + bName : "" %></option>
+                    <% } %>
+                </datalist>
+                <small class="form-hint">Standart: 00014<% if (branchLoadError != null) { %> &nbsp;<span style="color:var(--danger)">Filiallar yuklanmadi: <%= branchLoadError %></span><% } %></small>
             </div>
         </div>
     </div>
